@@ -73,7 +73,6 @@ public class Main
                 File outputfile = new File(f.getPath() + "\\" +  chr.fileName);
                 ImageIO.write(chr.img, "png", outputfile);
             }
-
         }
 
         System.out.println();

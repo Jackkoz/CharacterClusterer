@@ -18,7 +18,6 @@
 import Utils.Image;
 import org.apache.commons.math3.exception.NotPositiveException;
 import org.apache.commons.math3.exception.NullArgumentException;
-import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.util.MathUtils;
 
 import java.awt.image.BufferedImage;
@@ -33,7 +32,6 @@ import java.util.Set;
 
 public class DBScan
 {
-
     private final double eps;
     private final int minPts;
 
@@ -64,7 +62,7 @@ public class DBScan
         MathUtils.checkNotNull(points);
 
         final List<List<Character>> clusters = new ArrayList<>();
-        final Map<Clusterable, PointStatus> visited = new HashMap<>();
+        final Map<Character, PointStatus> visited = new HashMap<>();
 
         for (final Character point : points)
         {
@@ -90,7 +88,7 @@ public class DBScan
                                      final Character point,
                                      final List<Character> neighbors,
                                      final Collection<Character> points,
-                                     final Map<Clusterable, PointStatus> visited) {
+                                     final Map<Character, PointStatus> visited) {
         cluster.add(point);
         visited.put(point, PointStatus.PART_OF_CLUSTER);
 
@@ -144,13 +142,6 @@ public class DBScan
         return neighbors;
     }
 
-    /**
-     * Merges two lists together.
-     *
-     * @param one first list
-     * @param two second list
-     * @return merged lists
-     */
     private List<Character> merge(final List<Character> one, final List<Character> two) {
         final Set<Character> oneSet = new HashSet<>(one);
         for (Character item : two) {
@@ -161,14 +152,9 @@ public class DBScan
         return one;
     }
 
-    protected double distance(Clusterable p1, Clusterable p2)
+    protected double distance(Character p1, Character p2)
     {
-        Character c1 = (Character) p1;
-        Character c2 = (Character) p2;
-        BufferedImage img1 = c1.img;
-        BufferedImage img2 = c2.img;
-
-        return eucDistance(img1, img2);
+        return eucDistance(p1.img, p2.img);
     }
 
     private double eucDistance(BufferedImage img1, BufferedImage img2)
