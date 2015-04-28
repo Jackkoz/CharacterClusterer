@@ -33,6 +33,7 @@ import java.util.Set;
 public class DBScan
 {
     private final double eps;
+    private final double epsSqr;
     private final int minPts;
 
     public final HashMap<Character, HashMap<Character, Double>> distances = new HashMap<>();
@@ -53,6 +54,7 @@ public class DBScan
         }
 
         this.eps = eps;
+        this.epsSqr = eps * eps;
         this.minPts = minPts;
     }
 
@@ -165,6 +167,9 @@ public class DBScan
             {
                 distance += minDistance(x, y, img1, img2);
                 distance += minDistance(x, y, img2, img1);
+
+                if (distance > epsSqr + 1)
+                    break;
             }
         distance = Math.sqrt(distance);
 
