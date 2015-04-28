@@ -66,12 +66,12 @@ public class Main
             {
                 f.mkdir();
             }
-            System.out.println("*******");
-            System.out.println("Cluster size: " + c.size());
+//            System.out.println("*******");
+//            System.out.println("Cluster size: " + c.size());
             clustered += c.size();
             for (Character chr : c)
             {
-                System.out.println(chr.fileName);
+//                System.out.println(chr.fileName);
                 File outputfile = new File(f.getPath() + "\\" +  chr.fileName);
                 ImageIO.write(chr.img, "png", outputfile);
             }
@@ -84,6 +84,7 @@ public class Main
         for (List c : clusters)
             System.out.print(c.size() + " ");
         System.out.println();
+
         long minutes = Math.floorDiv(elapsed, 1000 * 60);
         long seconds = elapsed/1000 - 60 * minutes;
         System.out.println("\nTime: " + minutes + ":" + seconds);
