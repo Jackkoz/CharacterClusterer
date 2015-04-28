@@ -18,6 +18,6 @@ public class Character implements Clusterable
     @Override
     public double[] getPoint()
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

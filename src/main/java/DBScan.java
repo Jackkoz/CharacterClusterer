@@ -32,14 +32,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DBScan<T extends Clusterable>
+public class DBScan
 {
 
     private final double eps;
-
     private final int minPts;
 
-    public final HashMap<T, HashMap<T, Double>> distances = new HashMap<>();
+    public final HashMap<Character, HashMap<Character, Double>> distances = new HashMap<>();
 
     private enum PointStatus
     {
@@ -47,8 +46,7 @@ public class DBScan<T extends Clusterable>
         PART_OF_CLUSTER
     }
 
-    public DBScan(final double eps, final int minPts)
-            throws NotPositiveException
+    public DBScan(final double eps, final int minPts) throws NotPositiveException
     {
         if (eps < 0.0d) {
             throw new NotPositiveException(eps);
@@ -61,24 +59,27 @@ public class DBScan<T extends Clusterable>
         this.minPts = minPts;
     }
 
-    public List<Cluster<T>> cluster(final Collection<T> points) throws NullArgumentException
+    public List<Cluster<Character>> cluster(final Collection<Character> points) throws NullArgumentException
     {
         // sanity checks
         MathUtils.checkNotNull(points);
 
-        final List<Cluster<T>> clusters = new ArrayList<Cluster<T>>();
-        final Map<Clusterable, PointStatus> visited = new HashMap<Clusterable, PointStatus>();
+        final List<Cluster<Character>> clusters = new ArrayList<>();
+        final Map<Clusterable, PointStatus> visited = new HashMap<>();
 
-        for (final T point : points) {
-            if (visited.get(point) != null) {
+        for (final Character point : points)
+        {
+            if (visited.get(point) != null)
                 continue;
-            }
-            final List<T> neighbors = getNeighbors(point, points);
-            if (neighbors.size() >= minPts) {
-                // DBSCAN does not care about center points
-                final Cluster<T> cluster = new Cluster<T>();
+
+            final List<Character> neighbors = getNeighbors(point, points);
+            if (neighbors.size() >= minPts)
+            {
+                final Cluster<Character> cluster = new Cluster<>();
                 clusters.add(expandCluster(cluster, point, neighbors, points, visited));
-            } else {
+            }
+            else
+            {
                 visited.put(point, PointStatus.NOISE);
             }
         }
@@ -86,32 +87,22 @@ public class DBScan<T extends Clusterable>
         return clusters;
     }
 
-    /**
-     * Expands the cluster to include density-reachable items.
-     *
-     * @param cluster Cluster to expand
-     * @param point Point to add to cluster
-     * @param neighbors List of neighbors
-     * @param points the data set
-     * @param visited the set of already visited points
-     * @return the expanded cluster
-     */
-    private Cluster<T> expandCluster(final Cluster<T> cluster,
-                                     final T point,
-                                     final List<T> neighbors,
-                                     final Collection<T> points,
+    private Cluster<Character> expandCluster(final Cluster<Character> cluster,
+                                     final Character point,
+                                     final List<Character> neighbors,
+                                     final Collection<Character> points,
                                      final Map<Clusterable, PointStatus> visited) {
         cluster.addPoint(point);
         visited.put(point, PointStatus.PART_OF_CLUSTER);
 
-        List<T> seeds = new ArrayList<T>(neighbors);
+        List<Character> seeds = new ArrayList<>(neighbors);
         int index = 0;
         while (index < seeds.size()) {
-            final T current = seeds.get(index);
+            final Character current = seeds.get(index);
             PointStatus pStatus = visited.get(current);
             // only check non-visited points
             if (pStatus == null) {
-                final List<T> currentNeighbors = getNeighbors(current, points);
+                final List<Character> currentNeighbors = getNeighbors(current, points);
                 if (currentNeighbors.size() >= minPts) {
                     seeds = merge(seeds, currentNeighbors);
                 }
@@ -127,16 +118,9 @@ public class DBScan<T extends Clusterable>
         return cluster;
     }
 
-    /**
-     * Returns a list of density-reachable neighbors of a {@code point}.
-     *
-     * @param point the point to look for
-     * @param points possible neighbors
-     * @return the List of neighbors
-     */
-    private List<T> getNeighbors(final T point, final Collection<T> points) {
-        final List<T> neighbors = new ArrayList<T>();
-        for (final T neighbor : points) {
+    private List<Character> getNeighbors(final Character point, final Collection<Character> points) {
+        final List<Character> neighbors = new ArrayList<>();
+        for (final Character neighbor : points) {
             if (point != neighbor)
             {
                 double distance;
@@ -148,7 +132,7 @@ public class DBScan<T extends Clusterable>
                 {
                     distance = distance(neighbor, point);
                     if (!distances.containsKey(neighbor))
-                        distances.put(neighbor, new HashMap<T, Double>());
+                        distances.put(neighbor, new HashMap<>());
 
                     distances.get(neighbor).put(point, distance);
                 }
@@ -168,9 +152,9 @@ public class DBScan<T extends Clusterable>
      * @param two second list
      * @return merged lists
      */
-    private List<T> merge(final List<T> one, final List<T> two) {
-        final Set<T> oneSet = new HashSet<T>(one);
-        for (T item : two) {
+    private List<Character> merge(final List<Character> one, final List<Character> two) {
+        final Set<Character> oneSet = new HashSet<>(one);
+        for (Character item : two) {
             if (!oneSet.contains(item)) {
                 one.add(item);
             }

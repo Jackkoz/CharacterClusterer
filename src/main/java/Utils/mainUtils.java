@@ -1,3 +1,5 @@
+package Utils;
+
 import Utils.Image;
 
 import javax.imageio.ImageIO;
