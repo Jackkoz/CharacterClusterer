@@ -21,13 +21,15 @@ public class Main
             try
             {
                 characters.add(new Character(ImageIO.read(f), f.getName()));
-            } catch (RasterFormatException | EmptyImageException e)
+            }
+            catch (RasterFormatException | EmptyImageException e)
             {
                 System.out.println(f.getName());
                 System.out.println(e.getMessage());
             }
         }
-        DBScan clusterer = new DBScan(2, 1);
+
+        DBScan clusterer = new DBScan(2, 2);
         int clustered = 0;
         int i = 0;
 

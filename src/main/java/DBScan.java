@@ -185,7 +185,7 @@ public class DBScan
             return 0;
 
         int distance = 6;
-        final int RANGE = 2;
+        final int RANGE = 1;
 
         for (int x1 = x - RANGE; x1 <= x + RANGE; x1++)
         {
@@ -195,16 +195,15 @@ public class DBScan
             if ( x1 < 0 || x1 >= img2.getWidth())
                 continue;
 
-            for (int y1 = y - RANGE; y1 <= y + RANGE; y1++)
+            for (int y1 = y - (x1 - x); y1 <= y + RANGE; y1++)
             {
                 if (y1 >= 0 && y1 < img2.getHeight() && img2.getRGB(x1, y1) == colour)
                 {
                     distance = Math.min(distance, Math.min(Math.abs(x - x1), Math.abs(y - y1)));
-//                    distance = 1;
                 }
             }
         }
 
-        return distance * distance;
+        return (distance * distance) / 2;
     }
 }

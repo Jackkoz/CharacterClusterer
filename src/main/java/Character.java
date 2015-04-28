@@ -11,6 +11,6 @@ public class Character
     public Character(BufferedImage img, String s) throws EmptyImageException
     {
         fileName = s;
-        this.img = Image.cropWhitespace(Image.connectedImage(img));
+        this.img = Image.cropWhitespace(/*Image.connectedImage*/(img));
     }
 }
