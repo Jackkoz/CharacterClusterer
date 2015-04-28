@@ -1,5 +1,4 @@
 import Utils.EmptyImageException;
-import org.apache.commons.math3.ml.clustering.Cluster;
 
 import javax.imageio.ImageIO;
 import java.awt.image.RasterFormatException;
@@ -28,11 +27,11 @@ public class Main
                 System.out.println(e.getMessage());
             }
         }
-        DBScan<Character> clusterer = new DBScan<>(2, 1, new SumMinDistance());
+        DBScan clusterer = new DBScan(2, 1);
         int clustered = 0;
         int i = 0;
 
-        List<Cluster<Character>> clusters = clusterer.cluster(characters);
+        List<List<Character>> clusters = clusterer.cluster(characters);
 
         long end = System.currentTimeMillis();
         long elapsed = end - start;
@@ -57,7 +56,7 @@ public class Main
 
         root.mkdir();
 
-        for (Cluster<Character> c : clusters)
+        for (List<Character> c : clusters)
         {
             i++;
             File f = new File(root.getPath() + "\\" + i);
@@ -66,9 +65,9 @@ public class Main
                 f.mkdir();
             }
             System.out.println("*******");
-            System.out.println("Cluster size: " + c.getPoints().size());
-            clustered += c.getPoints().size();
-            for (Character chr : c.getPoints())
+            System.out.println("Cluster size: " + c.size());
+            clustered += c.size();
+            for (Character chr : c)
             {
                 System.out.println(chr.fileName);
                 File outputfile = new File(f.getPath() + "\\" +  chr.fileName);
@@ -81,8 +80,8 @@ public class Main
         System.out.println("Clusters: " + clusters.size());
         System.out.println("Total in clusters: " + clustered);
         System.out.print("Cluster sizes: ");
-        for (Cluster c : clusters)
-            System.out.print(c.getPoints().size() + " ");
+        for (List c : clusters)
+            System.out.print(c.size() + " ");
         System.out.println();
         long minutes = Math.floorDiv(elapsed, 1000 * 60);
         long seconds = elapsed/1000 - 60 * minutes;

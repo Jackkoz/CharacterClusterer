@@ -18,7 +18,6 @@
 import Utils.Image;
 import org.apache.commons.math3.exception.NotPositiveException;
 import org.apache.commons.math3.exception.NullArgumentException;
-import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.util.MathUtils;
 
@@ -59,12 +58,12 @@ public class DBScan
         this.minPts = minPts;
     }
 
-    public List<Cluster<Character>> cluster(final Collection<Character> points) throws NullArgumentException
+    public List<List<Character>> cluster(final Collection<Character> points) throws NullArgumentException
     {
         // sanity checks
         MathUtils.checkNotNull(points);
 
-        final List<Cluster<Character>> clusters = new ArrayList<>();
+        final List<List<Character>> clusters = new ArrayList<>();
         final Map<Clusterable, PointStatus> visited = new HashMap<>();
 
         for (final Character point : points)
@@ -75,7 +74,7 @@ public class DBScan
             final List<Character> neighbors = getNeighbors(point, points);
             if (neighbors.size() >= minPts)
             {
-                final Cluster<Character> cluster = new Cluster<>();
+                final List<Character> cluster = new ArrayList<>();
                 clusters.add(expandCluster(cluster, point, neighbors, points, visited));
             }
             else
@@ -87,12 +86,12 @@ public class DBScan
         return clusters;
     }
 
-    private Cluster<Character> expandCluster(final Cluster<Character> cluster,
+    private List<Character> expandCluster(final List<Character> cluster,
                                      final Character point,
                                      final List<Character> neighbors,
                                      final Collection<Character> points,
                                      final Map<Clusterable, PointStatus> visited) {
-        cluster.addPoint(point);
+        cluster.add(point);
         visited.put(point, PointStatus.PART_OF_CLUSTER);
 
         List<Character> seeds = new ArrayList<>(neighbors);
@@ -110,7 +109,7 @@ public class DBScan
 
             if (pStatus != PointStatus.PART_OF_CLUSTER) {
                 visited.put(current, PointStatus.PART_OF_CLUSTER);
-                cluster.addPoint(current);
+                cluster.add(current);
             }
 
             index++;
