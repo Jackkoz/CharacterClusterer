@@ -29,7 +29,7 @@ public class Main
             }
         }
 
-        DBScan clusterer = new DBScan(2, 2);
+        DBScan clusterer = new DBScan(10, 1);
         int clustered = 0;
         int i = 0;
 
@@ -75,6 +75,16 @@ public class Main
                 File outputfile = new File(f.getPath() + "\\" +  chr.fileName);
                 ImageIO.write(chr.img, "png", outputfile);
             }
+        }
+
+        File noiseDir = new File(root.getPath() + "\\noise");
+        if (!noiseDir.exists())
+            noiseDir.mkdir();
+
+        for (Character c : clusterer.noiseSet)
+        {
+            File outputfile = new File(noiseDir.getPath() + "\\" + c.fileName);
+            ImageIO.write(c.img, "png", outputfile);
         }
 
         System.out.println();

@@ -37,6 +37,8 @@ public class DBScan
 
     public final HashMap<Character, HashMap<Character, Double>> distances = new HashMap<>();
 
+    public final HashSet<Character> noiseSet = new HashSet<>();
+
     public static enum PointStatus
     {
         NOISE,
@@ -80,6 +82,7 @@ public class DBScan
             {
                 point.status = PointStatus.NOISE;
                 point.visited = true;
+                noiseSet.add(point);
             }
         }
 
@@ -183,8 +186,8 @@ public class DBScan
 
         int colour = img1.getRGB(x ,y);
 
-        if (colour != Image.BLACK)
-            return 0;
+//        if (colour != Image.BLACK)
+//            return 0;
 
         if (x < img2.getWidth() && y < img2.getHeight() && img2.getRGB(x, y) == colour)
             return 0;
