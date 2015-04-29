@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class DBScan
@@ -38,7 +37,7 @@ public class DBScan
 
     public final HashMap<Character, HashMap<Character, Double>> distances = new HashMap<>();
 
-    private enum PointStatus
+    public static enum PointStatus
     {
         NOISE,
         PART_OF_CLUSTER
@@ -64,22 +63,23 @@ public class DBScan
         MathUtils.checkNotNull(points);
 
         final List<List<Character>> clusters = new ArrayList<>();
-        final Map<Character, PointStatus> visited = new HashMap<>();
+//        final Map<Character, PointStatus> visited = new HashMap<>();
 
         for (final Character point : points)
         {
-            if (visited.get(point) != null)
+            if (point.visited)
                 continue;
 
             final List<Character> neighbors = getNeighbors(point, points);
             if (neighbors.size() >= minPts)
             {
                 final List<Character> cluster = new ArrayList<>();
-                clusters.add(expandCluster(cluster, point, neighbors, points, visited));
+                clusters.add(expandCluster(cluster, point, neighbors, points));
             }
             else
             {
-                visited.put(point, PointStatus.NOISE);
+                point.status = PointStatus.NOISE;
+                point.visited = true;
             }
         }
 
@@ -89,26 +89,26 @@ public class DBScan
     private List<Character> expandCluster(final List<Character> cluster,
                                      final Character point,
                                      final List<Character> neighbors,
-                                     final Collection<Character> points,
-                                     final Map<Character, PointStatus> visited) {
+                                     final Collection<Character> points) {
         cluster.add(point);
-        visited.put(point, PointStatus.PART_OF_CLUSTER);
+        point.status = PointStatus.PART_OF_CLUSTER;
+        point.visited = true;
 
         List<Character> seeds = new ArrayList<>(neighbors);
         int index = 0;
         while (index < seeds.size()) {
             final Character current = seeds.get(index);
-            PointStatus pStatus = visited.get(current);
             // only check non-visited points
-            if (pStatus == null) {
+            if (current.status == null) {
                 final List<Character> currentNeighbors = getNeighbors(current, points);
                 if (currentNeighbors.size() >= minPts) {
                     seeds = merge(seeds, currentNeighbors);
                 }
             }
 
-            if (pStatus != PointStatus.PART_OF_CLUSTER) {
-                visited.put(current, PointStatus.PART_OF_CLUSTER);
+            if (current.status != PointStatus.PART_OF_CLUSTER) {
+                current.status = PointStatus.PART_OF_CLUSTER;
+                current.visited = true;
                 cluster.add(current);
             }
 

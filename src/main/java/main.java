@@ -15,7 +15,7 @@ public class Main
         long start = System.currentTimeMillis();
 
         ArrayList<Character> characters = new ArrayList<>();
-        File[] files = new File("C:\\Users\\Jacek\\Documents\\Studia\\III\\SUS\\myapp\\data500").listFiles();
+        File[] files = new File("C:\\Users\\Jacek\\Documents\\Studia\\III\\SUS\\myapp\\data").listFiles();
         for (File f : files)
         {
             try

@@ -7,10 +7,14 @@ public class Character
 {
     public String fileName;
     public BufferedImage img;
+    public DBScan.PointStatus status;
+    public boolean visited;
 
     public Character(BufferedImage img, String s) throws EmptyImageException
     {
         fileName = s;
         this.img = Image.cropWhitespace(/*Image.connectedImage*/(img));
+        status = null;
+        visited = false;
     }
 }
