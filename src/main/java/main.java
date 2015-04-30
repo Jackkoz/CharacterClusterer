@@ -13,7 +13,7 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         ArrayList<Character> characters = new ArrayList<>();
-        for (File f : new File(args[1]).listFiles())
+        for (File f : new File(args[0]).listFiles())
         {
             try
             {
@@ -26,7 +26,7 @@ public class Main
 
         List<List<Character>> clusters = clusterer.cluster(characters);
 
-        PrintWriter output = new PrintWriter(args[2], "UTF-8");
+        PrintWriter output = new PrintWriter(args[1], "UTF-8");
 
         for (List<Character> c : clusters)
         {
@@ -37,11 +37,14 @@ public class Main
             output.println();
         }
 
+        output.print("Images classified as noise: ");
+
         for (Character chr : clusterer.noiseSet)
         {
             output.print(chr.fileName + " ");
-            output.println();
         }
+
+        output.println();
 
         output.close();
     }
