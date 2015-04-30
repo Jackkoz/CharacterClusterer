@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import Utils.Image;
 import org.apache.commons.math3.exception.NotPositiveException;
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.util.MathUtils;
@@ -134,7 +133,7 @@ public class DBScan
                 {
                     distance = distance(neighbor, point);
                     if (!distances.containsKey(neighbor))
-                        distances.put(neighbor, new HashMap<>());
+                        distances.put(neighbor, new HashMap<Character, Double>());
 
                     distances.get(neighbor).put(point, distance);
                 }
